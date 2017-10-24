@@ -29,7 +29,7 @@ class sigmoidLinear(Module):
         super(sigmoidLinear, self).__init__()
         self.name = name
         self.use_bias = use_bias
-        self.W = init_param((input_dim, output_dim), scale=5.)
+        self.W = init_param((input_dim, output_dim))
         self.params[self.name+'/W'] = self.W
         if self.use_bias:
             self.b = init_param((output_dim,))
@@ -109,8 +109,8 @@ class SGD(object):
         new_error = .5
         while abs((new_error - old_error) / old_error) > self.eps:
             X, Y = data.next()
-            model.forward(X)
-            Y_hat = model.backward(Y, self.lr)
+            Y_hat = model.forward(X)
+            model.backward(Y, self.lr)
             old_error = new_error
             new_error = ((Y_hat - Y)**2).sum()
             if data.cursor % 100 == 0:
