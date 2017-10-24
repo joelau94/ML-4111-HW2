@@ -42,9 +42,10 @@ class sigmoidLinear(Module):
         if _input.ndim <= 1:
             _input = _input.reshape(-1,1)
         self.input = _input
-        self.output = sigmoid(np.matmul(self.input, self.W)) #(size,in)(in,out)
+        self.output = np.matmul(self.input, self.W) #(size,in)(in,out)
         if self.use_bias:
             self.output += self.b #(size,out)+(out,)=(size,out)
+        self.output = sigmoid(self.output)
         return self.output
 
     def backward(self, dE_dy, lr):
