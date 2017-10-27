@@ -34,9 +34,11 @@ SETUP
 
 1. Prerequisite:
 
-    - python 2
+    - python 3
     - numpy
+    - scipy
     - matplotlib
+    - seanborn
 
 2. Running:
 
