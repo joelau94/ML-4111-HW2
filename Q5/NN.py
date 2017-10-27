@@ -21,10 +21,10 @@ class Module(object):
         self.params = dict()
 
 
-class sigmoidLinear(Module):
+class SigmoidLinear(Module):
     """Module sigmoidLinear"""
     def __init__(self, input_dim, output_dim, use_bias=True, name=""):
-        super(sigmoidLinear, self).__init__()
+        super(SigmoidLinear, self).__init__()
         self.name = name
         self.use_bias = use_bias
         self.W = init_param((input_dim, output_dim))
@@ -72,9 +72,9 @@ class TwoLayerFeedforward(object):
         self.params = {}
 
         # build NN
-        self.L1 = sigmoidLinear(self.input_dim, self.hidden_dim,
+        self.L1 = SigmoidLinear(self.input_dim, self.hidden_dim,
             name=self.name+'/L1')
-        self.L2 = sigmoidLinear(self.hidden_dim, self.output_dim,
+        self.L2 = SigmoidLinear(self.hidden_dim, self.output_dim,
             name=self.name+'/L2')
         self.params.update(self.L1.params)
         self.params.update(self.L2.params)
