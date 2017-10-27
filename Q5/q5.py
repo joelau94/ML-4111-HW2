@@ -2,7 +2,7 @@
 Solution to Problem 5, Homework 2, COMS 4771 Machine Learning, Fall 2017
 """
 
-from NN import *
+from nn import *
 from data import *
 from utils import *
 from math import *

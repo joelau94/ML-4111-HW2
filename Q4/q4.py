@@ -2,7 +2,7 @@
 Solution to Problem 4, Homework 2, COMS 4771 Machine Learning, Fall 2017
 """
 
-from PerceptronClassifier import *
+from perceptron_classifier import *
 from scipy.io import loadmat, savemat
 import os
 import matplotlib.pyplot as plt
