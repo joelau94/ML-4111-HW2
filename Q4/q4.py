@@ -8,23 +8,32 @@ from scipy.io import loadmat, savemat
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from perceptron_classifier import Data, TenDigitClassifier
+from .perceptron_classifier import Data, TenDigitClassifier
 
 
 def splitData(test_size, data_file, save_path='./data/'):
     data = loadmat(data_file)
-    train_data = {'X': data['X'][:-test_size], 'Y': data['Y'][:-test_size]}
+    train_data = {
+        'X': data['X'][:-test_size],
+        'Y': data['Y'][:-test_size]
+    }
     savemat(os.path.join(save_path, 'train_data.mat'),
-        train_data, appendmat=False)
-    test_data = {'X': data['X'][-test_size:], 'Y': data['Y'][-test_size:]}
+            train_data, appendmat=False)
+    test_data = {
+        'X': data['X'][-test_size:],
+        'Y': data['Y'][-test_size:]
+    }
     savemat(os.path.join(save_path, 'test_data.mat'),
-        test_data, appendmat=False)
+            test_data, appendmat=False)
 
 
-def runClassifier(version, split=200, save_interval=500, max_epoch=10000, data_path='./data/', degree=5):
+def runClassifier(version, split=200, save_interval=500,
+                  max_epoch=10000, data_path='./data/', degree=5):
     '''
     degree only make sense for v3
     '''
+    # pylint: disable=too-many-arguments
+
     sns.set()
     train_data = Data(os.path.join(data_path, 'train_data.mat'))
     test_data = Data(os.path.join(data_path, 'test_data.mat'))
@@ -35,7 +44,7 @@ def runClassifier(version, split=200, save_interval=500, max_epoch=10000, data_p
     classifier.getData(train_data)
     acc = []
     epochs = []
-    model_path = './Q4/models/v{}/epoch_{}/' # version of perceptron / epoch #
+    model_path = './Q4/models/v{}/epoch_{}/'  # version of perceptron / epoch #
     for check_point in range(1, int(max_epoch / save_interval) + 1):
         epoch = check_point * save_interval
         epochs.append(epoch)
@@ -45,8 +54,8 @@ def runClassifier(version, split=200, save_interval=500, max_epoch=10000, data_p
             classifier.save(model_path.format(version, epoch))
         print('Testing: v={}, epoch={}'.format(version, epoch))
         test_result = classifier.test(test_data.X)
-        acc.append( (test_result == test_data.Y).sum() \
-            / float(test_data.Y.shape[0]) )
+        acc.append((test_result == test_data.Y).sum() \
+            / float(test_data.Y.shape[0]))
         print('Acc: {}'.format(acc[-1]))
     if version == '3':
         classifier.save(model_path.format(version, epoch))

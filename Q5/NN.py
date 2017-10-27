@@ -2,7 +2,7 @@
 Solution to Problem 5, Homework 2, COMS 4771 Machine Learning, Fall 2017
 """
 
-# from math import *
+import abc
 
 import numpy as np
 
@@ -11,34 +11,42 @@ from .utils import init_param, sigmoid
 
 class Module(object):
     """Super class"""
-    def __init__(self, name=""):
+    def __init__(self, name=''):
         super(Module, self).__init__()
         self.name = name
         self.params = dict()
 
+    @abc.abstractmethod
+    def forward(self, x):
+        return
+
+    @abc.abstractmethod
+    def backward(self, dx, lr):
+        return
+
 
 class SigmoidLinear(Module):
     """Module SigmoidLinear"""
-    def __init__(self, input_dim, output_dim, use_bias=True, name=""):
+    def __init__(self, input_dim, output_dim, use_bias=True, name=''):
         super(SigmoidLinear, self).__init__()
         self.name = name
         self.use_bias = use_bias
         self.W = init_param((input_dim, output_dim))
-        self.params[self.name+'/W'] = self.W
+        self.params[self.name + '/W'] = self.W
         if self.use_bias:
             self.b = init_param((output_dim,))
-            self.params[self.name+'/b'] = self.b
+            self.params[self.name + '/b'] = self.b
 
         self.input = None
         self.output = None
 
     def forward(self, _input):
         if _input.ndim <= 1:
-            _input = _input.reshape(-1,1)
+            _input = _input.reshape(-1, 1)
         self.input = _input
-        self.output = np.matmul(self.input, self.W) #(size,in)(in,out)
+        self.output = np.matmul(self.input, self.W)  #(size,in)(in,out)
         if self.use_bias:
-            self.output += self.b #(size,out)+(out,)=(size,out)
+            self.output += self.b  #(size,out)+(out,)=(size,out)
         self.output = sigmoid(self.output)
         return self.output
 
@@ -57,9 +65,12 @@ class SigmoidLinear(Module):
         # backprop error
         return grad_x
 
+
 class TwoLayerFeedforward(object):
     """TwoLayerFeedforward"""
-    def __init__(self, input_dim, hidden_dim, output_dim, name=""):
+    # pylint: disable=too-many-instance-attributes
+
+    def __init__(self, input_dim, hidden_dim, output_dim, name=''):
         super(TwoLayerFeedforward, self).__init__()
         self.name = name
         self.input_dim = input_dim
@@ -94,6 +105,8 @@ class TwoLayerFeedforward(object):
 
 class SGD(object):
     """SGD"""
+    # pylint: disable=too-few-public-methods
+
     def __init__(self, lr, eps):
         super(SGD, self).__init__()
         self.lr = lr
@@ -107,7 +120,7 @@ class SGD(object):
             Y_hat = model.forward(X)
             model.backward(Y, self.lr)
             old_error = new_error
-            new_error = ((Y_hat - Y)**2).sum()
+            new_error = ((Y_hat - Y) ** 2).sum()
             if data.cursor % 100 == 0:
                 print('Training: data={}, error={}'
                       .format(data.cursor, new_error))

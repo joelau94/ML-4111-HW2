@@ -4,7 +4,6 @@ Solution to Problem 4, Homework 2, COMS 4771 Machine Learning, Fall 2017
 
 import os
 import sys
-import pickle as pkl
 
 import numpy as np
 from scipy.io import loadmat
@@ -26,25 +25,25 @@ class Data(object):
     def next(self, digit_1, digit_2):
         self.cursor = (self.cursor + 1) % self.size
         Y = self.Y.tolist()
-        while(Y[self.cursor]!=digit_1 and Y[self.cursor]!=digit_2):
+        while Y[self.cursor] != digit_1 and Y[self.cursor] != digit_2:
             self.cursor = (self.cursor + 1) % self.size
         if Y[self.cursor] == digit_1:
             y = np.asarray([1.])
         elif Y[self.cursor] == digit_2:
             y = np.asarray([-1.])
-        return self.X[self.cursor], y # shape=(784,), shape=(1,)
+        return self.X[self.cursor], y  # shape=(784,), shape=(1,)
 
     def next1(self, digit_1, digit_2, w):
         '''
         :param w: shape (784,)
         '''
-        ids = np.concatenate(( np.argwhere(self.Y == digit_1).reshape(-1),
-                np.argwhere(self.Y == digit_2).reshape(-1) ))
+        ids = np.concatenate((np.argwhere(self.Y == digit_1).reshape(-1),
+                              np.argwhere(self.Y == digit_2).reshape(-1)))
         X = self.X[ids]
         Y = np.asarray([1. if y == digit_1 else -1.
-            for y in self.Y[ids].tolist()]) # (size,)
-        idx = np.argmin(Y * np.matmul(X, w)) # (size,) * ((size,784)(784,))
-        return X[idx], Y[idx] # shape=(784,), shape=(1,)
+                        for y in self.Y[ids].tolist()])  # (size,)
+        idx = np.argmin(Y * np.matmul(X, w))  # (size,) * ((size,784)(784,))
+        return X[idx], Y[idx]  # shape=(784,), shape=(1,)
 
 
 class Perceptron(object):
@@ -53,7 +52,7 @@ class Perceptron(object):
         super(Perceptron, self).__init__()
         self.digit_1 = digit_1
         self.digit_2 = digit_2
-        self.w = np.zeros(w_dim) # shape=(784,) for v0,1,2
+        self.w = np.zeros(w_dim)  # shape=(784,) for v0,1,2
         self.params = {'w': self.w}
 
     def save(self, model_file):
@@ -61,8 +60,8 @@ class Perceptron(object):
 
     def load(self, model_file):
         self.params = np.load(model_file)
-        for k, v in self.params.iteritems():
-            eval('self.'+k+'=v')
+        for k, _ in self.params.iteritems():
+            eval('self.' + k + '=v')
 
 class PerceptronV0(Perceptron):
     """PerceptronV0"""
@@ -107,8 +106,8 @@ class PerceptronV2(Perceptron):
             x, y = data.next(self.digit_1, self.digit_2)
             if y * np.dot(self.w[-1], x) <= 0:
                 w_new = self.w[-1] + y * x
-                self.w = np.concatenate(( self.w, w_new[np.newaxis] ))
-                self.c = np.concatenate(( self.c, np.asarray([1.]) ))
+                self.w = np.concatenate((self.w, w_new[np.newaxis]))
+                self.c = np.concatenate((self.c, np.asarray([1.])))
             else:
                 self.c[-1] = self.c[-1] + 1.
 
@@ -116,11 +115,11 @@ class PerceptronV2(Perceptron):
         '''
         :param x: shape(784,) or shape(size,784)
         '''
-        result = np.sign( (
-            self.c.reshape((-1,1)) * np.matmul(self.w, x.T)
-            ).sum(axis=0) ) # (k,1) * (k,784)(784,size) --sum--> (size,)
+        result = np.sign((
+            self.c.reshape((-1, 1)) * np.matmul(self.w, x.T)
+        ).sum(axis=0))  # (k,1) * (k,784)(784,size) --sum--> (size,)
         result[result == 0.] = 1.
-        return result # (size,)
+        return result  # (size,)
 
 
 class PerceptronV3(Perceptron):
@@ -136,12 +135,12 @@ class PerceptronV3(Perceptron):
 
     def __initParams(self, data):
         np.random.seed(1)
-        ids = np.concatenate(( np.argwhere(data.Y==self.digit_1).reshape(-1),
-                np.argwhere(data.Y==self.digit_2).reshape(-1) ))
+        ids = np.concatenate((np.argwhere(data.Y == self.digit_1).reshape(-1),
+                              np.argwhere(data.Y == self.digit_2).reshape(-1)))
         np.random.shuffle(ids)
         self.X = data.X[ids]
         self.Y = np.asarray([1. if y == self.digit_1 else -1.
-            for y in data.Y[ids].tolist()]) # (size,)
+                             for y in data.Y[ids].tolist()]) # (size,)
         self.w = np.zeros_like(self.Y)
         self.data_cursor = 0
         self.params.update({'w': self.w, 'X': self.X, 'Y':self.Y})
@@ -152,23 +151,21 @@ class PerceptronV3(Perceptron):
             self.__initParams(data)
         x_dim = self.X.shape[0]
         for e in range(self.data_cursor, self.data_cursor + epochs):
-            x = self.X[e%x_dim]
-            y = self.Y[e%x_dim]
-            # pred = (self.w * self.Y) * (np.matmul(self.X, self.X.T) ** self.degree).T
-            # self.w[np.sign(pred.sum(axis=0)) != self.Y] += 1.
-            # pdb.set_trace()
+            x = self.X[e % x_dim]
+            y = self.Y[e % x_dim]
             pred = (self.w * self.Y) * (np.matmul(self.X, x) ** self.degree).T
             if np.sign(pred.sum()) != y:
-                self.w[e%x_dim] += 1.
+                self.w[e % x_dim] += 1.
         self.data_cursor += epochs
 
     def test(self, x):
-        result = np.sign( (
-            (self.w * self.Y).reshape(-1,1) * (np.matmul(self.X, x.T) ** self.degree)
-            ).sum(axis=0) ) #(size,)
+        result = np.sign((
+            (self.w * self.Y).reshape(-1, 1) \
+                * (np.matmul(self.X, x.T) ** self.degree)
+        ).sum(axis=0))  #(size,)
         result[result == 0.] = 1.
-        return result # (size,)
-        
+        return result  # (size,)
+
 
 class TenDigitClassifier(object):
     """TenDigitClassifier"""
@@ -182,12 +179,14 @@ class TenDigitClassifier(object):
         self.data = None
         if perceptron_version == '3':
             # BE CAREFUL! DON'T EXCHANGE i AND j HERE!!!
-            self.perceptrons = eval('[[Perceptron_v'
+            self.perceptrons = eval(
+                '[[Perceptron_v'
                 + self.version + '(i,j,' + str(x_dim) + ',' + str(degree)
                 + ') for j in range(10)] for i in range(10)]')
         else:
             # BE CAREFUL! DON'T EXCHANGE i AND j HERE!!!
-            self.perceptrons = eval('[[Perceptron_v'
+            self.perceptrons = eval(
+                '[[Perceptron_v'
                 + self.version + '(i,j,' + str(x_dim)
                 + ') for j in range(10)] for i in range(10)]')
 
@@ -198,8 +197,8 @@ class TenDigitClassifier(object):
         if not os.path.exists(model_path):
             os.makedirs(model_path)
         for i in range(10):
-            for j in range(i+1,10): # <digit_i>-<digit_j>.npz
-                model_file = os.path.join(model_path,'{}-{}.npz'.format(i,j))
+            for j in range(i + 1, 10):  # <digit_i>-<digit_j>.npz
+                model_file = os.path.join(model_path, '{}-{}.npz'.format(i, j))
                 self.perceptrons[i][j].save(model_file)
 
     def load(self, model_path):
@@ -207,14 +206,14 @@ class TenDigitClassifier(object):
             print('Non-existent path!')
             sys.exit(1)
         for i in range(10):
-            for j in range(i+1,10): # <digit_i>-<digit_j>.npz
-                model_file = os.path.join(model_path,'{}-{}.npz'.format(i,j))
+            for j in range(i + 1, 10):  # <digit_i>-<digit_j>.npz
+                model_file = os.path.join(model_path, '{}-{}.npz'.format(i, j))
                 self.perceptrons[i][j].load(model_file)
 
     def train(self, epochs):
         if self.data is not None:
             for i in range(10):
-                for j in range(i+1,10):
+                for j in range(i + 1, 10):
                     self.perceptrons[i][j].train(self.data, epochs)
 
     def test(self, x):
@@ -222,11 +221,11 @@ class TenDigitClassifier(object):
         :param x: shape(784,) or shape(size,784)
         '''
         if x.ndim == 1:
-            votes = np.zeros((10,1))
+            votes = np.zeros((10, 1))
         else:
             votes = np.zeros((10, x.shape[0]))
         for i in range(10):
-            for j in range(i+1,10):
+            for j in range(i + 1, 10):
                 prediction = self.perceptrons[i][j].test(x)
                 votes[i][np.argwhere(prediction == 1.)] += 1.
                 votes[j][np.argwhere(prediction == -1.)] += 1.

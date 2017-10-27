@@ -2,25 +2,18 @@
 Solution to Problem 5, Homework 2, COMS 4771 Machine Learning, Fall 2017
 """
 
-import os
-import sys
-import random
-import pickle as pkl
-
 import numpy as np
-from scipy.io import loadmat
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-__author__ = "Zhuoran Liu <zl2621@columbia.edu>"
-__date__ = "$Oct 21, 2017"
-
 
 def init_param(size, scale=.01):
-    return scale*np.random.randn(*size).astype('float32')
+    return scale * np.random.randn(*size).astype('float32')
+
 
 def sigmoid(x):
     return 1. / (1. + np.exp(-x))
+
 
 def plot_curve(data, model, save_path):
     sns.set()

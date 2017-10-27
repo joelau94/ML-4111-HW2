@@ -3,15 +3,8 @@ Solution to Problem 5, Homework 2, COMS 4771 Machine Learning, Fall 2017
 """
 
 import random
-import os
-import sys
 
-import numpy as np
-import pickle as pkl
 from scipy.io import loadmat
-
-__author__ = "Zhuoran Liu <zl2621@columbia.edu>"
-__date__ = "$Oct 21, 2017"
 
 
 class Data(object):
@@ -23,7 +16,7 @@ class Data(object):
         self.Y = raw['Y'].astype(float).reshape(-1)
         self.cursor = -1
         self.size = self.X.shape[0]
-        self.order = list(range(self.size)) # compatible with python3
+        self.order = list(range(self.size))  # compatible with python3
 
     def reset(self):
         self.cursor = -1
