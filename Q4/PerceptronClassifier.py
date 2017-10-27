@@ -3,7 +3,7 @@ Solution to Problem 4, Homework 2, COMS 4771 Machine Learning, Fall 2017
 """
 
 import numpy as np
-import cPickle as pkl
+import pickle as pkl
 from scipy.io import loadmat
 import os
 import sys

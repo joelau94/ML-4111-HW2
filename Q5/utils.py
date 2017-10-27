@@ -3,7 +3,7 @@ Solution to Problem 5, Homework 2, COMS 4771 Machine Learning, Fall 2017
 """
 
 import numpy as np
-import cPickle as pkl
+import pickle as pkl
 from scipy.io import loadmat
 import random
 import matplotlib.pyplot as plt
@@ -19,8 +19,8 @@ __date__ = "$Oct 21, 2017"
 def init_param(size, scale=.01):
     return scale*np.random.randn(*size).astype('float32')
 
-def sigmoid(_input):
-    return 1. / (1. + np.exp(-_input))
+def sigmoid(x):
+    return 1. / (1. + np.exp(-x))
 
 def plot_curve(data, model, save_path):
     sns.set()

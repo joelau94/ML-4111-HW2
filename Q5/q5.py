@@ -7,7 +7,7 @@ from data import *
 from utils import *
 from math import *
 import numpy as np
-import cPickle as pkl
+import pickle as pkl
 from scipy.io import loadmat
 import random
 import os
