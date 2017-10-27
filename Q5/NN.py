@@ -73,9 +73,9 @@ class TwoLayerFeedforward(object):
 
         # build NN
         self.L1 = SigmoidLinear(self.input_dim, self.hidden_dim,
-            name=self.name+'/L1')
+                                name=self.name + '/L1')
         self.L2 = SigmoidLinear(self.hidden_dim, self.output_dim,
-            name=self.name+'/L2')
+                                name=self.name + '/L2')
         self.params.update(self.L1.params)
         self.params.update(self.L2.params)
 
@@ -113,6 +113,6 @@ class SGD(object):
             old_error = new_error
             new_error = ((Y_hat - Y)**2).sum()
             if data.cursor % 100 == 0:
-                print('Training: data={}, error={}'.format(data.cursor, new_error))
-                #pdb.set_trace()
-        model.save(model_file)       
+                print('Training: data={}, error={}'
+                      .format(data.cursor, new_error))
+        model.save(model_file)
