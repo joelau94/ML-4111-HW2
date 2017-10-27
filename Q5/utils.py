@@ -2,15 +2,15 @@
 Solution to Problem 5, Homework 2, COMS 4771 Machine Learning, Fall 2017
 """
 
+import os
+import sys
+import random
+
 import numpy as np
 import pickle as pkl
 from scipy.io import loadmat
-import random
 import matplotlib.pyplot as plt
 import seaborn as sns
-import os
-import sys
-import pdb
 
 __author__ = "Zhuoran Liu <zl2621@columbia.edu>"
 __date__ = "$Oct 21, 2017"

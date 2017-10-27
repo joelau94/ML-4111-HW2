@@ -2,15 +2,14 @@
 Solution to Problem 4, Homework 2, COMS 4771 Machine Learning, Fall 2017
 """
 
-from perceptron_classifier import *
-from scipy.io import loadmat, savemat
 import os
+
+from scipy.io import loadmat, savemat
 import matplotlib.pyplot as plt
 import seaborn as sns
-import pdb
 
-__author__ = "Zhuoran Liu <zl2621@columbia.edu>"
-__date__ = "$Oct 14, 2017"
+from perceptron_classifier import Data, TenDigitClassifier
+
 
 def splitData(test_size, data_file, save_path='./data/'):
     data = loadmat(data_file)
@@ -20,6 +19,7 @@ def splitData(test_size, data_file, save_path='./data/'):
     test_data = {'X': data['X'][-test_size:], 'Y': data['Y'][-test_size:]}
     savemat(os.path.join(save_path, 'test_data.mat'),
         test_data, appendmat=False)
+
 
 def runClassifier(version, split=200, save_interval=500, max_epoch=10000, data_path='./data/', degree=5):
     '''
@@ -56,6 +56,7 @@ def runClassifier(version, split=200, save_interval=500, max_epoch=10000, data_p
     else:
         plt.savefig('./fig/{}-{}.png'.format(version, split))
     plt.clf()
+
 
 if __name__ == '__main__':
     splitData(200, './data/hw1data.mat')

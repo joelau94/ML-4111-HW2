@@ -2,15 +2,12 @@
 Solution to Problem 5, Homework 2, COMS 4771 Machine Learning, Fall 2017
 """
 
+# from math import *
+
 import numpy as np
-import pickle as pkl
-from scipy.io import loadmat
-import random
-from utils import *
-from math import *
-import os
-import sys
-import pdb
+
+from .utils import init_param, sigmoid
+
 
 __author__ = "Zhuoran Liu <zl2621@columbia.edu>"
 __date__ = "$Oct 21, 2017"
@@ -22,6 +19,7 @@ class Module(object):
         super(Module, self).__init__()
         self.name = name
         self.params = dict()
+
 
 class sigmoidLinear(Module):
     """Module sigmoidLinear"""
