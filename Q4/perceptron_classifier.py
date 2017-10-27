@@ -64,8 +64,8 @@ class Perceptron(object):
         for k, v in self.params.iteritems():
             eval('self.'+k+'=v')
 
-class Perceptron_v0(Perceptron):
-    """Perceptron_v0"""
+class PerceptronV0(Perceptron):
+    """PerceptronV0"""
 
     def train(self, data, epochs):
         for _ in range(epochs):
@@ -81,8 +81,9 @@ class Perceptron_v0(Perceptron):
         result[result == 0.] = 1.
         return result.reshape(-1) # (size,)
 
-class Perceptron_v1(Perceptron_v0):
-    """Perceptron_v1"""
+
+class PerceptronV1(PerceptronV0):
+    """PerceptronV1"""
 
     def train(self, data, epochs):
         for _ in range(epochs):
@@ -92,10 +93,11 @@ class Perceptron_v1(Perceptron_v0):
             else:
                 break
 
-class Perceptron_v2(Perceptron):
+
+class PerceptronV2(Perceptron):
     """Perceptron_v2"""
     def __init__(self, digit_1, digit_2, w_dim):
-        super(Perceptron_v2, self).__init__(digit_1, digit_2, w_dim)
+        super(PerceptronV2, self).__init__(digit_1, digit_2, w_dim)
         self.w = self.w[np.newaxis]
         self.c = np.asarray([0.])
         self.params['c'] = self.c
@@ -120,14 +122,15 @@ class Perceptron_v2(Perceptron):
         result[result == 0.] = 1.
         return result # (size,)
 
-class Perceptron_v3(Perceptron):
+
+class PerceptronV3(Perceptron):
     """Perceptron_v3: Kernel Perceptron"""
     def __init__(self, digit_1, digit_2, w_dim, degree):
         '''
         w stores alpha, w_dim is meaningless here
         w will be override by a correct one in __initParams()
         '''
-        super(Perceptron_v3, self).__init__(digit_1, digit_2, w_dim)
+        super(PerceptronV3, self).__init__(digit_1, digit_2, w_dim)
         self.degree = degree
         self.param_init = False
 
@@ -165,7 +168,6 @@ class Perceptron_v3(Perceptron):
             ).sum(axis=0) ) #(size,)
         result[result == 0.] = 1.
         return result # (size,)
-
         
 
 class TenDigitClassifier(object):

@@ -9,10 +9,6 @@ import numpy as np
 from .utils import init_param, sigmoid
 
 
-__author__ = "Zhuoran Liu <zl2621@columbia.edu>"
-__date__ = "$Oct 21, 2017"
-
-
 class Module(object):
     """Super class"""
     def __init__(self, name=""):
@@ -22,7 +18,7 @@ class Module(object):
 
 
 class SigmoidLinear(Module):
-    """Module sigmoidLinear"""
+    """Module SigmoidLinear"""
     def __init__(self, input_dim, output_dim, use_bias=True, name=""):
         super(SigmoidLinear, self).__init__()
         self.name = name

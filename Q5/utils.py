@@ -5,9 +5,9 @@ Solution to Problem 5, Homework 2, COMS 4771 Machine Learning, Fall 2017
 import os
 import sys
 import random
+import pickle as pkl
 
 import numpy as np
-import pickle as pkl
 from scipy.io import loadmat
 import matplotlib.pyplot as plt
 import seaborn as sns
