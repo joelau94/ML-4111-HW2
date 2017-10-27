@@ -21,7 +21,7 @@ def splitData(test_size, data_file, save_path='./data/'):
     savemat(os.path.join(save_path, 'test_data.mat'),
         test_data, appendmat=False)
 
-def runClassifier(version, save_interval=500, max_epoch=10000, data_path='./data/', degree=5):
+def runClassifier(version, split=200, save_interval=500, max_epoch=10000, data_path='./data/', degree=5):
     '''
     degree only make sense for v3
     '''
@@ -54,14 +54,22 @@ def runClassifier(version, save_interval=500, max_epoch=10000, data_path='./data
     if version == '3':
         plt.savefig('./fig/{}-{}.png'.format(version, degree))
     else:
-        plt.savefig('./fig/{}.png'.format(version))
+        plt.savefig('./fig/{}-{}.png'.format(version, split))
     plt.clf()
 
 if __name__ == '__main__':
     splitData(200, './data/hw1data.mat')
-    runClassifier('0')
-    runClassifier('1')
-    runClassifier('2')
+    runClassifier('0', split=200)
+    runClassifier('1', split=200)
+    runClassifier('2', split=200)
+    splitData(500, './data/hw1data.mat')
+    runClassifier('0', split=500)
+    runClassifier('1', split=500)
+    runClassifier('2', split=500)
+    splitData(1000, './data/hw1data.mat')
+    runClassifier('0', split=1000)
+    runClassifier('1', split=1000)
+    runClassifier('2', split=1000)
     runClassifier('3', save_interval=10, max_epoch=200, degree=5)
     runClassifier('3', save_interval=10, max_epoch=200, degree=7)
     runClassifier('3', save_interval=10, max_epoch=200, degree=10)
