@@ -29,4 +29,4 @@ def runNN(hidden_dim, data_file='./data/hw2data.mat'):
 
 
 if __name__ == '__main__':
-    runNN(32)
+    runNN(16)
