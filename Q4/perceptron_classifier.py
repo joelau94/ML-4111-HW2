@@ -63,6 +63,7 @@ class Perceptron(object):
         for k, _ in self.params.iteritems():
             eval('self.' + k + '=v')
 
+
 class PerceptronV0(Perceptron):
     """PerceptronV0"""
 
@@ -153,7 +154,7 @@ class PerceptronV3(Perceptron):
         for e in range(self.data_cursor, self.data_cursor + epochs):
             x = self.X[e % x_dim]
             y = self.Y[e % x_dim]
-            pred = (self.w * self.Y) * (np.matmul(self.X, x) ** self.degree).T
+            pred = (self.w * self.Y) * ((1 + np.matmul(self.X, x)) ** self.degree).T
             if np.sign(pred.sum()) != y:
                 self.w[e % x_dim] += 1.
         self.data_cursor += epochs
@@ -161,7 +162,7 @@ class PerceptronV3(Perceptron):
     def test(self, x):
         result = np.sign((
             (self.w * self.Y).reshape(-1, 1) \
-                * (np.matmul(self.X, x.T) ** self.degree)
+                * ((1 + np.matmul(self.X, x.T)) ** self.degree)
         ).sum(axis=0))  #(size,)
         result[result == 0.] = 1.
         return result  # (size,)
@@ -180,13 +181,13 @@ class TenDigitClassifier(object):
         if perceptron_version == '3':
             # BE CAREFUL! DON'T EXCHANGE i AND j HERE!!!
             self.perceptrons = eval(
-                '[[Perceptron_v'
+                '[[PerceptronV'
                 + self.version + '(i,j,' + str(x_dim) + ',' + str(degree)
                 + ') for j in range(10)] for i in range(10)]')
         else:
             # BE CAREFUL! DON'T EXCHANGE i AND j HERE!!!
             self.perceptrons = eval(
-                '[[Perceptron_v'
+                '[[PerceptronV'
                 + self.version + '(i,j,' + str(x_dim)
                 + ') for j in range(10)] for i in range(10)]')
 
@@ -229,5 +230,5 @@ class TenDigitClassifier(object):
                 prediction = self.perceptrons[i][j].test(x)
                 votes[i][np.argwhere(prediction == 1.)] += 1.
                 votes[j][np.argwhere(prediction == -1.)] += 1.
-        result = votes.argmax(axis=0) # (x.shape[0],)
+        result = votes.argmax(axis=0)  # (x.shape[0],)
         return result

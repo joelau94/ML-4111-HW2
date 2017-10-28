@@ -8,7 +8,7 @@ from scipy.io import loadmat, savemat
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from .perceptron_classifier import Data, TenDigitClassifier
+from perceptron_classifier import Data, TenDigitClassifier
 
 
 def splitData(test_size, data_file, save_path='./data/'):
@@ -80,6 +80,6 @@ if __name__ == '__main__':
     runClassifier('0', split=1000)
     runClassifier('1', split=1000)
     runClassifier('2', split=1000)
-    runClassifier('3', save_interval=10, max_epoch=200, degree=5)
-    runClassifier('3', save_interval=10, max_epoch=200, degree=7)
-    runClassifier('3', save_interval=10, max_epoch=200, degree=10)
+    runClassifier('3', save_interval=10, max_epoch=1000, degree=5)
+    runClassifier('3', save_interval=10, max_epoch=1000, degree=7)
+    runClassifier('3', save_interval=10, max_epoch=1000, degree=10)
