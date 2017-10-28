@@ -6,7 +6,7 @@ import abc
 
 import numpy as np
 
-from .utils import init_param, sigmoid
+from utils import init_param, sigmoid
 
 
 class Module(object):
@@ -44,23 +44,23 @@ class SigmoidLinear(Module):
         if _input.ndim <= 1:
             _input = _input.reshape(-1, 1)
         self.input = _input
-        self.output = np.matmul(self.input, self.W)  #(size,in)(in,out)
+        self.output = np.matmul(self.input, self.W)  # (size,in)(in,out)
         if self.use_bias:
-            self.output += self.b  #(size,out)+(out,)=(size,out)
+            self.output += self.b  # (size,out)+(out,)=(size,out)
         self.output = sigmoid(self.output)
         return self.output
 
     def backward(self, dE_dy, lr):
         # (size,out)
         grad_b = dE_dy * self.output * (1. - self.output)
-        #(in,size)(size,out)=(in,out)
-        grad_W = np.matmul(self.input.T, grad_b)
-        #(size,out)(out,in)=(size,in)
+        # (in,size)(size,out)=(in,out)
+        grad_W = np.matmul(self.input.T, grad_b) / self.input.shape[0]
+        # (size,out)(out,in)=(size,in)
         grad_x = np.matmul(grad_b, self.W.T)
 
         # update params
         self.W -= lr * grad_W
-        self.b -= lr * grad_b.reshape(-1)
+        self.b -= lr * grad_b.mean(axis=0)
 
         # backprop error
         return grad_x
@@ -107,21 +107,23 @@ class SGD(object):
     """SGD"""
     # pylint: disable=too-few-public-methods
 
-    def __init__(self, lr, eps):
+    def __init__(self, lr, epoch):
         super(SGD, self).__init__()
         self.lr = lr
-        self.eps = eps
+        self.epoch = epoch
 
     def __call__(self, data, model, model_file):
         old_error = 1.
         new_error = .5
-        while abs((new_error - old_error) / old_error) > self.eps:
-            X, Y = data.next()
+        # idx = 0
+        for idx in range(1, self.epoch+1):
+        # while abs((new_error - old_error) / old_error) > self.eps:
+            # idx += 1
+            X, Y = data.get()
             Y_hat = model.forward(X)
             model.backward(Y, self.lr)
             old_error = new_error
-            new_error = ((Y_hat - Y) ** 2).sum()
-            if data.cursor % 100 == 0:
-                print('Training: data={}, error={}'
-                      .format(data.cursor, new_error))
+            new_error = ((Y_hat - Y) ** 2).mean()
+            if idx % 100 == 0:
+                print('iteration: {}, training error={}'.format(idx, new_error))
         model.save(model_file)

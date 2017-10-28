@@ -12,8 +12,8 @@ class Data(object):
     def __init__(self, data_file):
         super(Data, self).__init__()
         raw = loadmat(data_file)
-        self.X = raw['X'].astype(float).reshape(-1)
-        self.Y = raw['Y'].astype(float).reshape(-1)
+        self.X = raw['X'].astype(float).reshape(-1, 1)
+        self.Y = raw['Y'].astype(float).reshape(-1, 1)
         self.cursor = -1
         self.size = self.X.shape[0]
         self.order = list(range(self.size))  # compatible with python3
@@ -28,3 +28,6 @@ class Data(object):
         x = self.X[self.order[self.cursor]]
         y = self.Y[self.order[self.cursor]]
         return x, y
+
+    def get(self):
+        return self.X, self.Y

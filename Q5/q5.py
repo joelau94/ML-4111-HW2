@@ -7,9 +7,9 @@ import os
 
 import numpy as np
 
-from .nn import TwoLayerFeedforward, SGD
-from .data import Data
-from .utils import plot_curve
+from nn import TwoLayerFeedforward, SGD
+from data import Data
+from utils import plot_curve
 
 
 random.seed(45)
@@ -22,11 +22,11 @@ def runNN(hidden_dim, data_file='./data/hw2data.mat'):
     model_path = './Q5/models/'
     if not os.path.exists(model_path):
         os.makedirs(model_path)
-    optim = SGD(1e-3, 1e-7)
+    optim = SGD(1, 100000)
     print('Training: hidden_dim={}'.format(hidden_dim))
-    optim(dat, mdl, model_path+mdl.name + '.mdl')
+    optim(dat, mdl, model_path + mdl.name + '.mdl')
     plot_curve(dat, mdl, './fig/5-{}.png'.format(hidden_dim))
 
 
 if __name__ == '__main__':
-    runNN(80)
+    runNN(32)
